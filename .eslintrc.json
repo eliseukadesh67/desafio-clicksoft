@@ -1,5 +1,13 @@
 {
   "extends": [
     "plugin:adonis/typescriptApp"
-  ]
+  ],
+  "parserOptions": {
+    "project": "tsconfig.json"
+  },
+  "rules": {
+    "camelcase": "off",
+    "@typescript-eslint/naming-convention": "off"
+  }
+
 }
