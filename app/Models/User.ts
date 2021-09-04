@@ -1,4 +1,4 @@
-import { BaseModel, column, hasMany, HasMany } from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, column, hasMany, HasMany , ManyToMany, manyToMany} from '@ioc:Adonis/Lucid/Orm'
 import Class from 'App/Models/Class';
 export default class User extends BaseModel {
   @column({ isPrimary: true })
@@ -17,4 +17,14 @@ export default class User extends BaseModel {
     foreignKey: 'idTeacher',
   })
   public classes: HasMany<typeof Class>
+
+  @manyToMany(() => Class, {
+    localKey: 'id',
+    pivotForeignKey: 'id_class',
+    relatedKey: 'id_student',
+    pivotRelatedForeignKey: 'id_class',
+    pivotTable: 'class_students',
+  })
+
+  public class: ManyToMany<typeof Class>
 }

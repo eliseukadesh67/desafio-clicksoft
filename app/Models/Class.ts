@@ -1,9 +1,12 @@
-import { BaseModel, belongsTo, BelongsTo, column } from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, belongsTo, BelongsTo, ManyToMany, manyToMany, column } from '@ioc:Adonis/Lucid/Orm'
 import User from './User'
 
 export default class Class extends BaseModel {
   @column({ isPrimary: true })
-  public idClass: number
+  public id_class: number
+
+  @column()
+  public id_teacher: number
 
   @column()
   public number: number
@@ -17,4 +20,13 @@ export default class Class extends BaseModel {
   @belongsTo(() => User)
   public user: BelongsTo<typeof User>
 
+  @manyToMany(() => User, {
+    localKey: 'id_class',
+    pivotForeignKey: 'id_student',
+    relatedKey: 'id_class',
+    pivotRelatedForeignKey: 'id',
+    pivotTable: 'class_students',
+  })
+
+  public student: ManyToMany<typeof User>
 }
