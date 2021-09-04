@@ -19,7 +19,22 @@
 */
 
 import Route from '@ioc:Adonis/Core/Route'
+import ClassesController from 'App/Controllers/Http/ClassesController'
 
 Route.get('/', async () => {
   return { hello: 'world' }
 })
+Route.post('/users', 'UsersController.create')
+Route.get('/users', 'UsersController.index')
+Route.get('/users/:id', 'UsersController.show')
+Route.delete('/users/:id', 'UsersController.destroy')
+
+Route.post('/classes', 'ClassesController.create')
+Route.post('/classes/student', 'ClassesController.addStudent')
+Route.get('/classes', 'ClassesController.index')
+Route.get('/class/:id_class', 'ClassesController.show')
+Route.get('/classes/:id_student', 'ClassesController.getByStudent')
+Route.get('/classList', 'ClassesController.getStudents')
+Route.delete('/classes/:id', 'ClassesController.destroy')
+Route.delete('/classes/student/:id_student', 'ClassesController.removeStudent')
+
