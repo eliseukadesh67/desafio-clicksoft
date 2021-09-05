@@ -1,3 +1,4 @@
+
 {
   "extends": [
     "plugin:adonis/typescriptApp"
@@ -6,8 +7,7 @@
     "project": "tsconfig.json"
   },
   "rules": {
-    "indent": ["error", 4],
-    "no-multi-spaces": ["error"],
-    "camelcase": "off"
+    "camelcase": "off",
+    "@typescript-eslint/naming-convention": "off"
   }
 }
