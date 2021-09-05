@@ -2,7 +2,6 @@ import Database from '@ioc:Adonis/Lucid/Database'
 
 export default class ClassStudentsRepository {
   public async getAll () {
-    console.log('To Aqui')
     const classes = await Database.query().from('class_students').select('*')
     return classes
   }
@@ -25,9 +24,14 @@ export default class ClassStudentsRepository {
   public async delete (id_class: number, id_student: number) {
     const student = await Database.rawQuery(`delete from class_students where id_class = ${id_class} and id_student = ${id_student} returning id_student`)
       .catch((error) => {
-        throw new Error(error.message)
+        return error
       })
 
     return student.rows
+  }
+  public async countStudent (id_class: number){
+    const count = await Database.query().from('class_students').count('*').where('id_class', id_class).first()
+
+    return count
   }
 }
