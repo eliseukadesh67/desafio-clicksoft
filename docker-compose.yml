@@ -6,13 +6,15 @@ services:
     image: postgres:alpine
     restart: always
     environment:
-      POSTGRES_HOST: localhost
-      POSTGRES_PORT: 5432
+      POSTGRES_HOST: db
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: postgres
+    ports:
+      - 8000:5432
     networks:
       - network-clicksoft
+
   app:
     container_name: app
     build:
