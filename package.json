@@ -3,10 +3,12 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
+    "predev": "node ace migration:run",
     "dev": "node ace serve --watch",
     "build": "node ace build --production",
     "start": "node server.js",
-    "lint": "eslint . --ext=.ts"
+    "lint": "eslint . --ext=.ts",
+    "migrate": "node ace migration:run"
   },
   "devDependencies": {
     "@adonisjs/assembler": "^5.0.0",
