@@ -1,4 +1,4 @@
-export default {
-  Teacher: "Teacher",
-  Student: "Student",
+export enum Roles {
+  Teacher = 'Teacher',
+  Student = 'Student',
 }
