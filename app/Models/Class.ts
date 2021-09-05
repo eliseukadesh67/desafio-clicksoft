@@ -8,6 +8,12 @@ export default class Class extends BaseModel {
   @column()
   public id_teacher: number
 
+  @belongsTo(() => User, {
+    localKey: 'id',
+    foreignKey: 'id_teacher',
+  })
+  public teacher: BelongsTo<typeof User>
+
   @column()
   public number: number
 
@@ -17,14 +23,11 @@ export default class Class extends BaseModel {
   @column()
   public available: boolean
 
-  @belongsTo(() => User)
-  public user: BelongsTo<typeof User>
-
   @manyToMany(() => User, {
     localKey: 'id_class',
-    pivotForeignKey: 'id_student',
-    relatedKey: 'id_class',
-    pivotRelatedForeignKey: 'id',
+    pivotForeignKey: 'id_class',
+    relatedKey: 'id',
+    pivotRelatedForeignKey: 'id_student',
     pivotTable: 'class_students',
   })
 
