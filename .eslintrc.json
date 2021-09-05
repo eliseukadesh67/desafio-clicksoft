@@ -11,11 +11,6 @@
   "rules": {
     "camelcase": "off",
     "@typescript-eslint/naming-convention": "off",
-    "@typescript-eslint/no-unsafe-assignment": "on",
-    "@typescript-eslint/no-unsafe-member-access": "on",
-    "@typescript-eslint/no-unsafe-return": "on",
-    "@typescript-eslint/no-irregular-whitespace": "on",
-    "@typescript-eslint/brace-style": "on"
   },
   "plugins": [
     "eslint-plugin",
