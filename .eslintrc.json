@@ -1,13 +1,32 @@
 {
   "extends": [
-    "plugin:adonis/typescriptApp"
+    "plugin:adonis/typescriptApp",
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:@typescript-eslint/recommended-requiring-type-checking"
   ],
   "parserOptions": {
     "project": "tsconfig.json"
   },
   "rules": {
     "camelcase": "off",
-    "@typescript-eslint/naming-convention": "off"
+    "@typescript-eslint/naming-convention": "off",
+    "@typescript-eslint/no-unsafe-assignment": "on",
+    "@typescript-eslint/no-unsafe-member-access": "on",
+    "@typescript-eslint/no-unsafe-return": "on",
+    "@typescript-eslint/no-irregular-whitespace": "on",
+    "@typescript-eslint/brace-style": "on"
+  },
+  "plugins": [
+    "eslint-plugin",
+    "@typescript-eslint",
+    "import",
+    "eslint-comments",
+    "@typescript-eslint/internal",
+    "simple-import-sort"
+  ],
+  "env": {
+    "es6": true,
+    "node": true
   }
-
 }
