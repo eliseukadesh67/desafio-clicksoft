@@ -1,24 +1,11 @@
 {
   "extends": [
-    "plugin:adonis/typescriptApp",
+    "plugin:adonis/typescriptApp"
   ],
   "parserOptions": {
     "project": "tsconfig.json"
   },
   "rules": {
-    "camelcase": "off",
-    "@typescript-eslint/naming-convention": "off",
-  },
-  "plugins": [
-    "eslint-plugin",
-    "@typescript-eslint",
-    "import",
-    "eslint-comments",
-    "@typescript-eslint/internal",
-    "simple-import-sort"
-  ],
-  "env": {
-    "es6": true,
-    "node": true
+    "camelcase": "off"
   }
 }
