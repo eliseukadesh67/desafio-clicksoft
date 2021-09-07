@@ -55,7 +55,11 @@ export default class ClassesRepository {
     }
   }
   public async getByStudent (idStudent: number) {
-    return await ClassStudent.query().from('class_students').select('*').where('id_student', idStudent)
+    try {
+      return await ClassStudent.query().from('class_students').select('*').where('id_student', idStudent)
+    } catch (error) {
+      throw new Error(error.message)
+    }
   }
   public async studentExists (idStudent: number, idClass: number) {
     return await ClassStudent.query()
@@ -73,6 +77,25 @@ export default class ClassesRepository {
   public async deleteStudent (id_student: number, id_class: number) {
     try {
       return await ClassStudent.rawQuery(`delete from class_students where id_class = ${id_class} and id_student = ${id_student} returning id_student`)
+    } catch (error) {
+      throw new Error(error.message)
+    }
+  }
+  public async getStudents (clss: any) {
+    try {
+      const students = await clss.related('student').query()
+      return ({
+        class: clss.id_class,
+        classes: students.map((student) => {
+          return {
+            id_student: student.id,
+            name: student.name,
+            email: student.email,
+            birthday: student.birthday,
+            registration: student.registration,
+          }
+        }),
+      })
     } catch (error) {
       throw new Error(error.message)
     }

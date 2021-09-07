@@ -77,6 +77,13 @@ export default class ClassService {
       throw new Error(error.message)
     }
   }
+  public async getStudents (id_class: number) {
+    try{
+      const students = this.repository.getStudents(id_class)
+    }catch(error){
+      throw new Error(error.message)
+    }
+  }
   public async removeStudent (id_class: number, id_student: number) {
     try {
       return await this.repository.deleteStudent(id_student, id_class)
