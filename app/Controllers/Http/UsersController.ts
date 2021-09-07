@@ -1,19 +1,16 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import User from 'App/Models/User'
-import { Roles } from 'App/Helpers/role'
+import UserService from 'App/Services/UserService'
 
 export default class UserController {
+  private service = new UserService()
+
   public async index ({ response }: HttpContextContract) {
     try {
-      const users = await User.all()
+      const users = await this.service.getUsers()
 
-      if (!users) {
-        return response.status(404).json({ 'message': 'No content' })
-      }
-
-      return response.status(201).json(users)
+      return response.status(200).json(users)
     } catch (error) {
-      return response.status(400).json({ 'message': error.message })
+      return response.status(500).json({ 'message': error.message})
     }
   }
 
@@ -28,17 +25,9 @@ export default class UserController {
         password,
       } = request.only(['name', 'registration', 'birthday', 'email', 'role', 'password'])
 
-      const exists = await User.findBy('email', email)
+      const data = {name, registration, birthday, email, role, password}
+      const user = await this.service.addUser(data)
 
-      if (exists) {
-        return response.status(409).json({ 'message': 'Email already exists!' })
-      }
-
-      const chosen_role = Roles[role]
-
-      const data = { name, registration, birthday, email, role: chosen_role, password }
-
-      const user = await User.create(data)
       return response.status(201).json(user)
     } catch (error) {
       return response.status(400).json({ 'message': error.message })
@@ -46,8 +35,9 @@ export default class UserController {
   }
 
   public async show ({ params, response }: HttpContextContract) {
+    const id = params.id
     try {
-      const user = await User.findOrFail(params.id)
+      const user = await this.service.showUser(id)
 
       return response.status(200).json(user)
     } catch (error) {
@@ -55,10 +45,16 @@ export default class UserController {
     }
   }
 
-  public async destroy ({ params }: HttpContextContract) {
-    const user = await User.findOrFail(params.id)
+  public async destroy ({ params , response}: HttpContextContract) {
+    const id = params.id
 
-    await user.delete()
+    try{
+      const user = await this.service.removeUser(id)
+
+      return response.status(204).json(user)
+    } catch(error){
+      return response.status(400).json({ 'message': error.message })
+    }
   }
 }
 
