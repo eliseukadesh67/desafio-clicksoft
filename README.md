@@ -77,6 +77,6 @@ Mas Caso queira rodar a aplicação sem utilizar o docker, primeiro é necessár
     PG_PASSWORD=<senha-do-banco-local>
     PG_DB_NAME=<nome-do-banco-local>
 
-# 4. Insomnia
+# 3. Insomnia
 
 Na raiz do projeto terá uma pasta chamada **Insomnia** e nela existe um arquivo no formato JSON que será utilizado no Insomnia para testar as rotas da aplicação.
