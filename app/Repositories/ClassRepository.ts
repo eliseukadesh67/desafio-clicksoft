@@ -54,25 +54,42 @@ export default class ClassesRepository {
       return new Error(error.message)
     }
   }
-  public async getByStudent (idStudent: number) {
+  public async getByStudent (student: any) {
     try {
-      return await ClassStudent.query().from('class_students').select('*').where('id_student', idStudent)
+      const classes = await student.related('class').query().preload('teacher')
+      return {
+        aluno: student.name,
+        salas: classes.map((clss) => {
+          return { class: clss.number, teacher: clss.teacher.name }
+        }),
+      }
     } catch (error) {
       throw new Error(error.message)
     }
   }
-  public async studentExists (idStudent: number, idClass: number) {
+  public async studentExists (id_student: number, id_class: number) {
+    console.log(id_student, id_class)
     return await ClassStudent.query()
       .from('class_students')
-      .select('id_student')
-      .where('id_student', idStudent)
-      .where('id_class', idClass)
+      .select('*')
+      .where('id_student', id_student)
+      .where('id_class', id_class).first()
   }
   public async addStudent (idClass: number, idStudent: number) {
     const clss = { id_class: idClass, id_student: idStudent }
-    const id_student = await ClassStudent.table('class_students').insert(clss).returning('id_student')
+    const [id_student] = await ClassStudent.table('class_students').insert(clss).returning('id_student')
 
     return id_student
+  }
+  public async edit (id_class: number, data: any) {
+    try {
+      const clss = await Class.findOrFail(id_class)
+      clss.merge(data)
+      await clss.save()
+      return clss
+    } catch (error) {
+      throw new Error(error.message)
+    }
   }
   public async deleteStudent (id_student: number, id_class: number) {
     try {
@@ -86,7 +103,7 @@ export default class ClassesRepository {
       const students = await clss.related('student').query()
       return ({
         class: clss.id_class,
-        classes: students.map((student) => {
+        students: students.map((student) => {
           return {
             id_student: student.id,
             name: student.name,
