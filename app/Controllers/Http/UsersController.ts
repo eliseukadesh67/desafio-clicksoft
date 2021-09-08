@@ -10,11 +10,11 @@ export default class UserController {
 
       return response.status(200).json(users)
     } catch (error) {
-      return response.status(500).json({ 'message': error.message })
+      return response.status(400).json({ 'message': error.message })
     }
   }
 
-  public async store ({ request, response}: HttpContextContract, auth) {
+  public async store ({ request, response}: HttpContextContract) {
     try {
       const {
         name,

@@ -24,7 +24,7 @@ export default class ClassesController {
 
       return response.status(201).json(id)
     } catch (error) {
-      return response.status(500).json({ 'message': error.message })
+      return response.status(400).json({ 'message': error.message })
     };
   }
   public async addStudent ({ request, response }: HttpContextContract) {
@@ -43,7 +43,7 @@ export default class ClassesController {
       const clss = await this.service.showClass(params.id_class)
       return response.status(200).json({ clss })
     } catch (error) {
-      return response.status(500).json({ 'message': error.message })
+      return response.status(400).json({ 'message': error.message })
     }
   }
   public async edit ({ params, response, request }: HttpContextContract) {
@@ -72,7 +72,7 @@ export default class ClassesController {
       const id = await this.service.removeStudent(Number(id_class), Number(params.id_student))
       return response.status(200).json({ message: 'Student removed!', id: id.id_student })
     } catch (error) {
-      return response.status(500).json({ 'message': error.message })
+      return response.status(400).json({ 'message': error.message })
     }
   }
   public async getClassesbyStudent ({ response, params }: HttpContextContract) {
