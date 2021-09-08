@@ -41,7 +41,6 @@ export default class UserRepository {
       const user = await User.findOrFail(id)
       user.merge(data)
       await user.save()
-      console.log(user)
       return {
         id: user.id,
         name: user.name,

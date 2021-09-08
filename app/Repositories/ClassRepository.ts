@@ -68,7 +68,6 @@ export default class ClassesRepository {
     }
   }
   public async studentExists (id_student: number, id_class: number) {
-    console.log(id_student, id_class)
     return await ClassStudent.query()
       .from('class_students')
       .select('*')

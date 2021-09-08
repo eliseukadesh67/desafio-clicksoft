@@ -117,7 +117,6 @@ export default class ClassService {
   public async removeStudent (id_class: number, id_student: number) {
     try {
       const exists = await this.studentExists(id_student, id_class)
-      console.log(exists)
       if (!exists) {
         throw new Error('Could not find this student in this class')
       }
@@ -155,8 +154,6 @@ export default class ClassService {
   public async removeClass (id_class: number) {
     try {
       const exists = await this.checkExists(id_class)
-
-      console.log(exists)
 
       if (!exists) {
         throw new Error('Class not found!')

@@ -82,7 +82,7 @@ export default class ClassesController {
 
       return response.status(200).json(classes)
     } catch (error) {
-      return response.status(400).json({ 'message': error.stack })
+      return response.status(400).json({ 'message': error.message })
     }
   }
   public async getStudentsByClass ({ params, response }: HttpContextContract) {
