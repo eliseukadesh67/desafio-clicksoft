@@ -60,7 +60,7 @@ export default class UserController {
     const id = params.id
 
     try {
-      const user = await this.service.removeUser(id)
+      await this.service.removeUser(id)
 
       return response.status(204).json({'message': 'User removed!'})
     } catch (error) {
