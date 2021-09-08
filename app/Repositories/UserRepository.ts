@@ -1,6 +1,6 @@
 import User from 'App/Models/User'
 
-export default class UserRepository{
+export default class UserRepository {
   public async getAll () {
     try {
       const users = await User.all()
@@ -27,19 +27,34 @@ export default class UserRepository{
       throw new Error(error.message)
     }
   }
-  public async findByEmail (email: string){
-    try{
+  public async findByEmail (email: string) {
+    try {
       const user = await User.findBy('email', email)
 
       return user
-    }catch(error){
+    } catch (error) {
+      throw new Error(error.message)
+    }
+  }
+  public async edit (id: number, data: any) {
+    try {
+      const user = await User.findOrFail(id)
+      user.merge(data)
+      await user.save()
+      console.log(user)
+      return {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        registration: user.registration,
+      }
+    } catch (error) {
       throw new Error(error.message)
     }
   }
   public async delete (id: number) {
     try {
-      const user = await User.query().where('id', id).delete().first()
-
+      const user = await User.query().where('id', id).delete()
       return user
     } catch (error) {
       return new Error(error.message)
