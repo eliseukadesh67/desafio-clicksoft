@@ -10,11 +10,11 @@ export default class UserController {
 
       return response.status(200).json(users)
     } catch (error) {
-      return response.status(500).json({ 'message': error.message})
+      return response.status(500).json({ 'message': error.message })
     }
   }
 
-  public async create ({ request, response }: HttpContextContract) {
+  public async store ({ request, response}: HttpContextContract, auth) {
     try {
       const {
         name,
@@ -24,11 +24,10 @@ export default class UserController {
         role,
         password,
       } = request.only(['name', 'registration', 'birthday', 'email', 'role', 'password'])
-
-      const data = {name, registration, birthday, email, role, password}
+      const data = { name, registration, birthday, email, role, password }
       const user = await this.service.addUser(data)
 
-      return response.status(201).json(user)
+      return response.status(201).json({ 'id': user.id })
     } catch (error) {
       return response.status(400).json({ 'message': error.message })
     }
@@ -45,14 +44,26 @@ export default class UserController {
     }
   }
 
-  public async destroy ({ params , response}: HttpContextContract) {
+  public async edit ({ params, response, request }: HttpContextContract) {
+    const { id } = params
+    const data = request.only(['name', 'email', 'registration', 'birthday'])
+
+    try {
+      const user = await this.service.editUser(id, data)
+      return response.status(200).json(user)
+    } catch (error) {
+      return response.status(400).json({ 'message': error.message })
+    }
+  }
+
+  public async destroy ({ params, response }: HttpContextContract) {
     const id = params.id
 
-    try{
+    try {
       const user = await this.service.removeUser(id)
 
-      return response.status(204).json(user)
-    } catch(error){
+      return response.status(204).json({'message': 'User removed!'})
+    } catch (error) {
       return response.status(400).json({ 'message': error.message })
     }
   }

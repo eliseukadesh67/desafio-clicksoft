@@ -1,132 +1,98 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import Class from 'App/Models/Class'
-import Database from '@ioc:Adonis/Lucid/Database'
-import Class_StudentsRepository from 'App/Repositories/Class_StudentsRepository'
-import User from 'App/Models/User'
-
-const repository = new Class_StudentsRepository()
+import ClassService from 'App/Services/ClassService'
 
 export default class ClassesController {
-  public async index ({ response }: HttpContextContract) {
-    const classes = await Database.query().from('classes').select('*')
+  private service = new ClassService()
 
-    return response.status(200).json({ classes })
+  public async index ({ response }: HttpContextContract) {
+    try {
+      const classes = await this.service.getClasses()
+      return response.status(200).json({ classes })
+    } catch (error) {
+      return response.status(500).json({ 'message': error.message })
+    }
   }
 
   public async create ({ request, response }: HttpContextContract) {
     const id_teacher = Number(request.header('Authorization'))
     const { number, capacity, available } = request.only(['number', 'capacity', 'available'])
-    const clss = await Class.create({id_teacher, number, capacity, available })
 
-    return response.status(201).json(clss)
+    try {
+      const clss = { id_teacher, number, capacity, available }
+
+      const id = await this.service.addClass(clss)
+
+      return response.status(201).json(id)
+    } catch (error) {
+      return response.status(500).json({ 'message': error.message })
+    };
   }
   public async addStudent ({ request, response }: HttpContextContract) {
     let { id_class, id_student } = request.only(['id_class', 'id_student'])
-    const find = await repository.studentExists(id_student, id_class)
-    if (find.length > 0) {
-      return response.status(400).json({ 'message': 'Student already exists.' })
+    const id_teacher = Number(request.header('Authorization'))
+
+    try {
+      const student = await this.service.addStudent(id_class, id_student, id_teacher)
+      return response.status(201).json({ 'message': 'Student added!', 'id_student': student })
+    } catch (error) {
+      return response.status(401).json({ 'message': error.message })
     }
-
-    const clss = await Class.find(id_class)
-    const student_exists = await User.find(id_student)
-
-    if(!student_exists){
-      return response.status(404).json({'message': 'Student not found!'})
-    }
-
-    if(!clss) {
-      return response.status(404).json({'message': 'Class not found!'})
-    }
-
-    const full = !clss.available
-
-    if(full) {
-      return response.status(404).json({'message': 'Class is full!'})
-    }
-
-    const student = await repository.add(id_class, id_student)
-
-    const {count} = await repository.countStudent(id_class)
-
-    if(Number(count) >= clss.capacity){
-      await Class.query().update('available', false).where('id_class', id_class)
-    }
-
-    return response.status(201).json({ 'message': 'Aluno inserido!', 'id_student': student })
   }
   public async show ({ params, response }: HttpContextContract) {
-    const clss = await Class.findOrFail(params.id_class)
+    try {
+      const clss = await this.service.showClass(params.id_class)
+      return response.status(200).json({ clss })
+    } catch (error) {
+      return response.status(500).json({ 'message': error.message })
+    }
+  }
+  public async edit ({ params, response, request }: HttpContextContract) {
+    const { id_class } = params
+    const data = request.only(['number', 'capacity', 'available'])
 
-    return response.status(200).json({ clss })
+    try {
+      const user = await this.service.editClass(id_class, data)
+      return response.status(200).json(user)
+    } catch (error) {
+      return response.status(400).json({ 'message': error.message })
+    }
   }
 
   public async destroy ({ params, response }: HttpContextContract) {
-    const clss = await Class.findOrFail(params.id)
-
-    await clss.delete()
-      .catch((error) => {
-        return response.status(400).json({ 'message': error.message })
-      })
-      .then(() => {
-        return response.status(200).json({ 'Class deleted:': params.id })
-      })
+    try {
+      const clss = await this.service.removeClass(params.id)
+      return response.status(200).json({ 'message': 'Class deleted!', 'id': clss })
+    } catch (error) {
+      return response.status(500).json({ 'message': error.message })
+    }
   }
   public async removeStudent ({ params, request, response }: HttpContextContract) {
     const { id_class } = request.only(['id_class'])
-    const [id] = await repository.delete(Number(id_class), Number(params.id_student))
-    if(!id){
-      return response.status(400).json({ message:'Invalid student id!'})
-    }
-    return response.status(200).json({ message:'Student removed!', id: id.id_student})
-  }
-  public async getStudents ({ response }: HttpContextContract) {
-    const clss = await repository.getAll().catch((error) => {
-      throw new Error(error.message)
-    })
-
-    return response.status(200).json({ 'Relation Class-Student': clss })
-  }
-  public async getClassesbyStudent ({response, params}: HttpContextContract){
-    try{
-      const student = await User.findOrFail(params.id_student)
-      if(!student){
-        return response.status(404).json({'message': 'Student not found'})
-      }
-      const classes = await student.related('class').query().preload('teacher')
-      return response.status(200).json({
-        student: student.name,
-        classes: classes.map((clss) => {
-          return { number: clss.number, professor: clss.teacher.name }
-        }),
-      })
-    }catch(error){
-      return response.status(400).json({'message': error.stack})
+    try {
+      const id = await this.service.removeStudent(Number(id_class), Number(params.id_student))
+      return response.status(200).json({ message: 'Student removed!', id: id.id_student })
+    } catch (error) {
+      return response.status(500).json({ 'message': error.message })
     }
   }
-  public async getStudentsByClass ({params, response} : HttpContextContract){
-    const {id_class} = params
+  public async getClassesbyStudent ({ response, params }: HttpContextContract) {
+    const { id_student } = params
+    try {
+      const classes = await this.service.getClassesbyStudent(id_student)
 
-    try{
-      const clss = await Class.find(id_class)
+      return response.status(200).json(classes)
+    } catch (error) {
+      return response.status(400).json({ 'message': error.stack })
+    }
+  }
+  public async getStudentsByClass ({ params, response }: HttpContextContract) {
+    const { id_class } = params
 
-      if(!clss){
-        return response.status(404).json({'message': 'Class not found!'})
-      }
-      const students = await clss.related('student').query()
-      return response.status(200).json({
-        class: clss.id_class,
-        classes: students.map((student) => {
-          return {
-            id_student:  student.id,
-            name: student.name,
-            email: student.email,
-            birthday: student.birthday,
-            registration: student.registration,
-          }
-        }),
-      })
-    } catch(error){
-      return response.status(400).json({'message':error.message})
+    try {
+      const students = await this.service.getStudents(id_class)
+      return response.status(200).json(students)
+    } catch (error) {
+      return response.status(400).json({ 'message': error.message })
     }
   }
 }
