@@ -12,7 +12,7 @@
  
 O primeiro passo é clonar o repositório.
  
-   $ git clone https://github.com/eliseukadesh67/desafio-clicksoft.git
+    $ git clone https://github.com/eliseukadesh67/desafio-clicksoft.git
  
  
 Para executar a api, existem duas opções, utilizando docker com o servidor e banco configurados, ou configurando seu banco local, rodar as migrations, e utilizar yarn ou npm
@@ -21,7 +21,7 @@ Para executar a api, existem duas opções, utilizando docker com o servidor e b
  
 Na pasta raiz do projeto execute o seguinte comando para subir o container da api junto com um banco de dados postgresql.
  
-   docker-compose up
+    docker-compose up
  
 E pronto, a aplicação já está funcionando, e escutando na porta 3333.
  
