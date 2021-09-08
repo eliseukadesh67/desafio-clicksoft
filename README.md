@@ -61,9 +61,9 @@ ou
  
 # 2. Configuração do banco de dados
  
-Se a opção de rodar a aplicação utilizando o docker for escolhida, na imagem docker da api e do banco de dados, já estão com todas as credenciais e dependências configuradas.
+Se optar por utilizar o docker para subir a aplicação, a imagem docker da API e do banco de dados, já estão com todas as credenciais e dependências configuradas.
  
-Mas Caso queira rodar a aplicação sem utilizar o docker primeiro é necessário configurar um banco de dados Postgresql localmente e após configurá-lo atualizar as credenciais no arquivo .env na raiz do projeto.
+Mas Caso queira rodar a aplicação sem utilizar o docker, primeiro é necessário configurar um banco de dados Postgresql localmente e após configurá-lo atualizar as credenciais no arquivo .env na raiz do projeto.
  
     PORT=3333
     HOST=0.0.0.0
@@ -76,3 +76,7 @@ Mas Caso queira rodar a aplicação sem utilizar o docker primeiro é necessári
     PG_USER=<usuario-do-banco-local>
     PG_PASSWORD=<senha-do-banco-local>
     PG_DB_NAME=<nome-do-banco-local>
+
+# 4. Insomnia
+
+Na raiz do projeto terá uma pasta chamada **Insomnia** e nela existe um arquivo no formato JSON que será utilizado no Insomnia para testar as rotas da aplicação.
