@@ -4,7 +4,7 @@ import { Roles } from 'App/Helpers/role'
 export default class UserService {
   private repository = new UserRepository()
 
-  public async checkExists (email: string){
+  public async checkExists (email: string) {
     return await this.repository.findByEmail(email)
   }
   public async getUsers () {
@@ -16,11 +16,11 @@ export default class UserService {
     }
   }
   public async addUser (data: any) {
-    const {name, registration, birthday, email, password, role} = data
+    const { name, registration, birthday, email, password, role } = data
     try {
       const exists = await this.checkExists(email)
 
-      if(exists){
+      if (exists) {
         throw new Error('User already exists!')
       }
 
@@ -39,7 +39,7 @@ export default class UserService {
     try {
       const user = await this.repository.getUser(id)
 
-      if(!user) {
+      if (!user) {
         throw new Error('User not found!')
       }
 
@@ -48,18 +48,30 @@ export default class UserService {
       throw new Error(error.message)
     }
   }
+  public async editUser (id: number, data: object) {
+    try {
+      const exists = await this.showUser(id)
+
+      if (!exists) {
+        throw new Error('User not found')
+      }
+      const user = await this.repository.edit(id, data)
+      return user
+    } catch (error) {
+      throw new Error(error.message)
+    }
+  }
   public async removeUser (id: number) {
     try {
-      const exists = await this.repository.getUser(id)
-
-      if(!exists){
-        throw new Error('User not found!')
+      const exists = await this.showUser(id)
+      if (!exists) {
+        throw new Error('User not found')
       }
       const user = await this.repository.delete(id)
 
       return user
     } catch (error) {
-      return new Error(error.message)
+      throw new Error(error.message)
     }
   }
 }
