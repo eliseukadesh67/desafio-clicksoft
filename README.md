@@ -15,7 +15,7 @@ O primeiro passo é clonar o repositório.
     $ git clone https://github.com/eliseukadesh67/desafio-clicksoft.git
  
  
-Para executar a api, existem duas opções, utilizando docker com o servidor e banco configurados, ou configurando seu banco local, rodar as migrations, e utilizar yarn ou npm
+Para executar a api, existem duas opções, utilizar docker com o servidor e banco de dados configurados, ou configurar seu banco local, rodar as migrations, e utilizar yarn ou npm
  
 ### 1. Utilizando Docker
  
